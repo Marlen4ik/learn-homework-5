@@ -4,5 +4,10 @@
 -- 1. Создай отдельную базу library_extended. Команду выполни в Query Tool для postgres, отдельно и вне BEGIN/COMMIT.
 -- TODO: напиши решение здесь.
 
+CREATE DATABASE library_extended;
+
 -- 2. Открой новый Query Tool для library_extended. Проверь current_database() и current_schema(). Дальше работай только здесь.
 -- TODO: напиши решение здесь.
+
+SELECT current_database();
+SELECT current_schema();
