@@ -33,7 +33,7 @@ CREATE table public.categories(
 CREATE table public.books(
     id INT PRIMARY KEY,
     title TEXT NOT NULL,
-    categoty_id INT NOT NULL REFERENCES categories(id),
+    category_id INT NOT NULL REFERENCES categories(id),
     copies INT NOT NULL DEFAULT 0 CHECK(copies>=0),
     price NUMERIC(10,2) NOT NULL CHECK(price>=0),
     published_year INT NOT NULL CHECK(published_year BETWEEN 1900 AND 2026)

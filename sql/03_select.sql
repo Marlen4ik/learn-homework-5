@@ -4,8 +4,16 @@
 -- 1. Все читатели: id, name, city. Сортировка по name, затем id.
 -- TODO: напиши решение здесь.
 
+SELECT id, name, city
+FROM public.readers
+ORDER BY name, id;
+
 -- 2. Название, цена и copies каждой книги. Сортировка по id книги.
 -- TODO: напиши решение здесь.
+
+SELECT title, price, copies
+FROM public.books
+ORDER BY id;
 
 -- 3. Все читатели из Москвы. Сортировка по id.
 -- TODO: напиши решение здесь.
