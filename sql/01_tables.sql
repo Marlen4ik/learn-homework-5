@@ -6,7 +6,7 @@
 
 CREATE table public.readers(
     id INT PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL CHECK (length(trim(name)) > 0), -- Добавил после 6 задания
     email TEXT UNIQUE NULL,
     city TEXT NOT NULL,
     registered_on DATE NOT NULL,
@@ -35,7 +35,7 @@ CREATE table public.books(
     title TEXT NOT NULL,
     category_id INT NOT NULL REFERENCES categories(id),
     copies INT NOT NULL DEFAULT 0 CHECK(copies>=0),
-    price NUMERIC(10,2) NOT NULL CHECK(price>=0),
+    price NUMERIC(10,2) NOT NULL CHECK(price>0), -- Поменял после 6 задания
     published_year INT NOT NULL CHECK(published_year BETWEEN 1900 AND 2026)
 );
 

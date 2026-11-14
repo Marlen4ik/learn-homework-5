@@ -4,21 +4,58 @@
 -- 1. Запрос 9.1 ниже должен находить читателей без email. Исправь и объясни ошибку.
 -- TODO: напиши решение здесь.
 
+-- На таблице стоит ограничение которое запрещает добавлять null в поле email
+
 -- 2. Запрос 9.2 ниже должен выводить выдачи с именами читателей. Исправь связь, сохрани SELECT и JOIN.
 -- TODO: напиши решение здесь.
+
+SELECT l.id, r.name FROM public.loans l
+JOIN public.readers r ON r.id = l.reader_id;
 
 -- 3. Запрос 9.3 ниже должен сохранять всех читателей, даже без текущих выдач. Исправь расположение фильтра.
 -- TODO: напиши решение здесь.
 
+SELECT r.id, r.name, l.id AS loan_id
+FROM public.readers r LEFT JOIN public.loans l ON l.reader_id = r.id and l.returned = FALSE;
+
 -- 4. Запрос 9.4 ниже должен менять город только читателя 3. Добавь безопасное условие и покажи строку до/после. Выполняй исправление внутри BEGIN/ROLLBACK.
 -- TODO: напиши решение здесь.
+BEGIN;
+
+SELECT *
+FROM public.readers
+WHERE id = 3;
+
+UPDATE public.readers SET city = 'Тула'
+WHERE id = 3;
+
+SELECT *
+FROM public.readers
+WHERE id = 3;
+
+ROLLBACK;
 
 -- 5. Запрос 9.5 ниже должен создавать категорию. Исправь синтаксис, выполни внутри BEGIN/ROLLBACK.
 -- TODO: напиши решение здесь.
 
+BEGIN;
+
+CREATE TABLE public.debug_categories (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL
+);
+
+ROLLBACK;
+
 -- 6. Запрос 9.6 ниже должен создавать незакрытую выдачу с корректными датами. Исправь только значения дат, выполни внутри BEGIN/ROLLBACK. Для этого упражнения copies не меняй: здесь проверяется ограничение дат.
 -- TODO: напиши решение здесь.
 
+BEGIN;
+
+INSERT INTO public.loans (id, reader_id, book_id, loan_date, due_date, returned)
+VALUES (950, 3, 10, '2026-06-01', '2026-06-10', FALSE);
+
+ROLLBACK;
 
 -- Неверные примеры ниже закомментированы. Рядом напиши исправления.
 -- Каждый новый SELECT располагай под соответствующим условием выше.

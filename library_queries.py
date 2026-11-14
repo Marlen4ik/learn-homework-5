@@ -1,3 +1,4 @@
+from database import connect
 """Задания 11.3–11.5: чтение и добавление читателей через Psycopg."""
 
 
@@ -9,7 +10,22 @@ def available_books(min_copies=1):
     Используй параметризованный запрос и with database.connect().
     Если книг нет, верни [].
     """
-    raise NotImplementedError("Реализуй available_books(min_copies)")
+    if min_copies < 1:
+        raise ValueError('Число должно быть больше 1')
+
+    with connect().cursor() as cur:
+        cur.execute(
+            """
+            SELECT id, title, copies, price
+            FROM books
+            WHERE copies >= %s;
+            """,
+            (min_copies,),
+        )
+        result = cur.fetchall()
+        if result is None:
+            return []
+        return result
 
 
 def reader_loans(reader_id):
@@ -19,8 +35,18 @@ def reader_loans(reader_id):
     Порядок по due_date, затем loans.id. Даты верни как datetime.date.
     При отсутствии читателя или выдач верни []. Не печатай внутри функции.
     """
-    raise NotImplementedError("Реализуй reader_loans(reader_id)")
-
+    with connect().cursor() as cur:
+        cur.execute(
+            """
+            SELECT l.id, b.title, l.due_date
+            FROM public.loans l
+            JOIN public.books b ON b.id = l.book_id
+            WHERE l.reader_id = %s
+            """,
+            (reader_id,),
+        )
+        result = cur.fetchall()
+        return result
 
 def add_reader(reader_id, name, email, city, registered_on):
     """Добавь активного читателя и верни reader_id после подтверждения.
@@ -30,4 +56,14 @@ def add_reader(reader_id, name, email, city, registered_on):
     Подключение через database.connect(), все значения — отдельные параметры.
     Ошибки PostgreSQL передай вызывающему коду. Соединение должно закрыться.
     """
-    raise NotImplementedError("Реализуй add_reader(...)")
+    with connect().cursor() as cur:
+        result = cur.execute(
+            """
+            INSERT INTO readers(id, name, email, city, registered_on)
+            VALUES
+                (%s,%s,%s,%s,%s)
+            RETURNING *
+            """,
+            (reader_id, name, email, city, registered_on,),
+        )
+        return result.fetchone()
